@@ -148,3 +148,89 @@ function deepEqual(a,b){
 		return false;
 	return true;
 }
+
+/* CHAPTER 5 Higher Order Functions
+   -------------------------------- */
+
+// flatten 2d array into 1d array
+function flatten2dArray(ar){
+	return ar.reduce(function(prev, cur){
+		return prev.concat(cur);
+	});
+}
+
+var ANCESTRY_FILE = require('/Users/tim/Documents/js/eloquent_exercises/ancestry.js');
+var ancestry = JSON.parse(ANCESTRY_FILE);
+
+var byName = {};
+ancestry.forEach(function(person){
+	byName[person.name] = person;
+});
+
+// find the age difference for every mother and child
+var ageDiff = ancestry.filter(function(person){
+	return byName[person.mother];
+}).map(function(person){
+	return person.born - byName[person.mother].born;
+});
+
+function average(array){
+	function plus(a,b){ return a + b};
+	return array.reduce(plus) / array.length;
+}
+
+var centuries = {};
+// get age of every person and group them per century 
+ancestry.forEach(function(person){
+	var century = Math.ceil(person.died / 100);
+	if (!(century in centuries))
+		centuries[century] = [];
+	centuries[century].push(person.died - person.born);
+});
+
+/* Groups elements in array by a value returned from groupName function
+   input: 
+	groupName - returns the group name an element in array belongs
+	array - has elements we want to group
+   output:
+    object mapping group names to arrays containing the elements that belong to that group */
+function groupBy(array, groupName){
+	var groups = {};
+	array.forEach(function(el){
+		var key = groupName(el);
+		if (key in groups)
+			groups[key].push(el);
+		else
+			groups[key] = [el];
+	});
+	return groups;
+}
+
+var byCentury = groupBy(ancestry, function (person){
+	return Math.ceil(person.died / 100);
+});
+
+for (century in byCentury){
+	var ages = byCentury[century].map(function(person){
+		return person.died - person.born;
+	});
+	// console.log(century + ":" + average(ages));
+}
+
+// Call isTrue on each element in array and return true if all calls return true
+function every(array, isTrue){
+	for (var i=0; i<array.length; i++){
+		if (!isTrue(array[i]))
+			return false;
+	}
+	return true;
+}
+
+// Call isTrue on each element in array and return true if any call returns true
+function some(array, isTrue){
+	for (var i=0; i<array.length; i++){
+		if (isTrue(array[i]))
+			return true;
+	}
+	return false;
+} 
