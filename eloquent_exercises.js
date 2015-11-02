@@ -21,7 +21,7 @@ function isEven(num){
 	}
 }
 
-// given a string, returns the quantity of the character 'x' 
+// given a string, returns the quantity of the character 'x'
 function countXs(str, x){
 	var xs = 0;
 	for (var i=0; i<str.length; i++){
@@ -32,7 +32,7 @@ function countXs(str, x){
 	return xs;
 }
 
-/* CHAPTER 4 Data structures: Objects & Arrays 
+/* CHAPTER 4 Data structures: Objects & Arrays
    ------------------------------------------- */
 
 // Create array with elements from 'a' to 'b' inclusive, with increments 'step'
@@ -72,7 +72,7 @@ function reverseArrayInPlace(ar){
 function arrayToList(ar){
 	var prev = null;
 	for (var i=ar.length-1; i>=0; i--){
-		var cur = { 
+		var cur = {
 			val: ar[i],
 			rest: prev
 		}
@@ -93,7 +93,7 @@ function listToArray(list){
 
 // prepend an element 'el' before list
 function prepend(list, el){
-	return { 
+	return {
 		val: el,
 		rest: list
 	};
@@ -103,7 +103,7 @@ function printList(list){
 	var str = "";
 	while(list){
 		str += "(" + list.val + ")";
-		list = list.rest 
+		list = list.rest
 		if (list)
 			str += '-';
 	}
@@ -180,7 +180,7 @@ function average(array){
 }
 
 var centuries = {};
-// get age of every person and group them per century 
+// get age of every person and group them per century
 ancestry.forEach(function(person){
 	var century = Math.ceil(person.died / 100);
 	if (!(century in centuries))
@@ -189,7 +189,7 @@ ancestry.forEach(function(person){
 });
 
 /* Groups elements in array by a value returned from groupName function
-   input: 
+   input:
 	groupName - returns the group name an element in array belongs
 	array - has elements we want to group
    output:
@@ -233,4 +233,4 @@ function some(array, isTrue){
 			return true;
 	}
 	return false;
-} 
+}
