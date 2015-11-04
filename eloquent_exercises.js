@@ -159,7 +159,7 @@ function flatten2dArray(ar){
   });
 }
 
-var ANCESTRY_FILE = require('/Users/tim/Documents/js/eloquent_exercises/ancestry.js');
+var ANCESTRY_FILE = require('./code_from_book/ancestry.js');
 var ancestry = JSON.parse(ANCESTRY_FILE);
 
 var byName = {};
@@ -214,7 +214,7 @@ for (century in byCentury){
   var ages = byCentury[century].map(function(person){
     return person.died - person.born;
   });
-  // console.log(century + ":" + average(ages));
+ // console.log(century + ":" + average(ages));
 }
 
 // Call isTrue on each element in array and return true if all calls return true
@@ -235,4 +235,93 @@ function some(array, isTrue){
   return false;
 }
 
+/* CHAPTER 6 The Secret Life of Objects
+   ------------------------------------ */
 
+function Vector(x, y){
+  this.x = x;
+  this.y = y;
+}
+
+Vector.prototype.plus = function(vec2){
+  return new Vector(this.x + vec2.x, this.y + vec2.y);
+};
+
+Vector.prototype.minus = function(vec2){
+  return new Vector(this.x - vec2.x, this.y - vec2.y);
+};
+
+Object.defineProperty(Vector.prototype, "length", {
+  get: function(){ return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2)); }
+});
+
+Vector.prototype.toString = function(){
+  return "(" + this.x + ',' + this.y + ')';
+};
+
+require("./code_from_book/load")("code_from_book/mountains.js", "code_from_book/06_object.js");
+
+function StretchCell(inner, width, height){
+  this.inner = inner;
+  this.width = width;
+  this.height = height;
+}
+
+StretchCell.prototype.minHeight = function(){
+  return Math.max(this.height, this.inner.minHeight());
+}
+
+StretchCell.prototype.minWidth = function(){
+  return Math.max(this.width, this.inner.minWidth());
+}
+
+StretchCell.prototype.draw = function(width, height){
+  return this.inner.draw(width, height);
+}
+
+// iteration interface
+function next(){ } // returns the next element in sequence
+/* returns a boolean that indicates whether there is another element in the sequence
+relative to where it is currently pointing. If true, point to the next element. */
+function hasNext(){ }
+
+function logFive(seqObj){
+  for (var i=0; seqObj.hasNext() && i<5; i++){
+    console.log(seqObj.next());
+  }
+}
+
+function ArraySeq(array){
+  this.array = array;
+  this.index = -1;
+  this.length = array.length;
+}
+
+ArraySeq.prototype.next = function(){
+  return this.array[this.index];
+};
+
+ArraySeq.prototype.hasNext = function(){
+  if (this.index + 1 < this.length){
+    this.index++;
+    return true;
+  }
+  return false;
+}
+
+function RangeSeq(from, to){
+  this.cur = from - 1;
+  this.last = to;
+}
+
+RangeSeq.prototype.next = function(){
+  return this.cur;
+};
+
+RangeSeq.prototype.hasNext = function(){
+  if (this.cur + 1 <= this.last){
+    this.cur++;
+    return true;
+  }
+  return false;
+}
