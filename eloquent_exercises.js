@@ -325,3 +325,65 @@ RangeSeq.prototype.hasNext = function(){
   }
   return false;
 }
+
+/* CHAPTER 8 Bugs and Error Handling
+   --------------------------------- */
+
+var MultiplicationUnitFailure = function(message) {
+  this.message = message;
+  this.stack = (new Error()).stack;
+};
+
+MultiplicationUnitFailure.prototype = Object.create(Error.prototype);
+MultiplicationUnitFailure.prototype.name = "MultiplicationUnitFailure";
+
+var primitiveMultiply = function(a, b) {
+  if (Math.random() > 0.5) {
+    return a * b;
+  } else {
+    throw new MultiplicationUnitFailure("primitiveMultiply screwed up");
+  }
+};
+
+var loopUntilNoError = function() {
+  while (true) {
+    try {
+      console.log(primitiveMultiply(1,2));
+      break;
+    } catch(e) {
+      if (e instanceof MultiplicationUnitFailure) {
+        console.log('Error: ' + e.message);
+      } else {
+        throw e;
+      }
+    }
+  }
+};
+
+// code from book
+var box = {
+  locked: true,
+  unlock: function() { this.locked = false; },
+  lock: function() { this.locked = true;  },
+  _content: [],
+  get content() {
+    if (this.locked) throw new Error("Locked!");
+    return this._content;
+  }
+};
+// end code from book
+
+var withBoxUnlocked = function(callback) {
+  box.unlock();
+  try {
+    callback();
+  } finally {
+    box.lock();
+    console.log('box locked: ' + box.locked);
+  }
+};
+
+withBoxUnlocked(function(){
+  box.lock();
+  console.log(box.content);
+});
